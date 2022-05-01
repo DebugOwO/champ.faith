@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+{% block avatar %}{{ user_data['discord']['avatar'] }}{% endblock %}
+{% block body %}
+
+<section class="text-center my-4">
+    <div class="container-fluid">
+        <h1>Your profile</h1>
+    </div>
+</section>
+
+<div class="container text-center p-3">
+    <div class="row">
+        <div class="col-lg-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <img class="img-fluid rounded-circle my-3" onerror="this.src='/static/images/avatar/default.png'" src="{{ user_data['discord']['avatar'] }}" alt="Avatar" width="150" height="150">
+                    <h5 class="card-title text-truncate p-1 my-2" title="{{ user_data['discord']['username'] }}#{{ user_data['discord']['discriminator'] }}">{{ user_data['discord']['username'] }}<span class="tag">#{{ user_data['discord']['discriminator'] }}</span></h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <samp><b>Join date: </b>{{ user_data['joined'] }}</samp>
+                        </li>
+                        <li class="list-group-item">
+                            <samp>{% if user_data['rank'][0] > 3 %}<b>Rank: </b>{% else %}<b>Watchdog: </b>{% endif %}{{ user_data['rank'][1] }}</samp>
+                        </li>
+                        {% if user_data['rank'][0] > 4 %}
+                        <li class="list-group-item">
+                            <samp><b>UID: </b> {{ user_data['uid'] }}</samp>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    {% if services is defined and user_data['rank'][0] > 4 %}
+                    <h5 class="card-title my-3">Website status</h5>
+                    <ul class="list-group">
+                        {% for service in services %}
+                        <li class="list-group-item">
+                            <samp>
+                                <b>{{ service|title }}: </b>
+                                {% if services[service] is false %}
+                                {% if service == 'withdraw' %}
+                                <span class="text-muted">Bot offline</span>
+                                {% else %}
+                                <span class="text-danger">Disabled</span>
+                                {% endif %}
+                                {% else %}
+                                <span class="text-success">Active</span>
+                                {% endif %}
+                            </samp>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <h5 class="card-title my-3">Invite codes</h5>
+                    {% if user_data['invites'] %}
+                    {% for invite in user_data['invites'] %}
+                    <div class="collapse" id="code-spoiler">
+                        <div class="mb-2"><samp>https://champ.faith/login?invite={{ invite['code'] }}</samp></div>
+                    </div>
+                    {% if loop.index == user_data['invites']|length %}
+                    <button class="btn btn-sm" type="button" id="codes" data-bs-toggle="collapse" data-bs-target="#code-spoiler">
+                        Show ({{ user_data['invites']|length }})
+                    </button>
+                    {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    You have no unused invitation codes
+                    {% endif %}
+                    <form method="POST">
+                        <input type="hidden" name="gen" value="foo">
+                        {% if user_data['rank'][0] < 5 or services['invite'] is false %}
+                        <button type="submit" class="btn btn-primary mt-3" disabled>Generate an invite</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-primary mt-3">Generate an invite</button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-3">
+                <h2 class="my-4">Inventory</h2>
+                <div class="card-body" id="inv">
+                    {% if user_data['inventory']['knifes'] or user_data['inventory']['chairs'] or user_data['inventory']['accessories'] %}
+                    <form method="POST">
+                        <div class="row row-cols-1 row-cols-md-3 justify-content-center">
+                            {% set count = [] %}
+                            {% for sorting in user_data['inventory'] %}
+                            {% for item in user_data['inventory'][sorting] %}
+                            {% set foo = count.append(1) %}
+                            <div class="col-8 col-md-4 p-3">
+                                <label class="form-check-label" for="check{{ count|length }}"><img class="img-fluid" src="/static/images/items/{{ sorting }}/{{ item[1] }}.webp" title="{{ item[1] }}" alt="{{ item[1] }}" width="250" height="250"></label>
+                                <div class="form-check d-inline-block">
+                                    <input class="form-check-input" type="checkbox" name="item" value="{{ sorting[0] }}{{ item[0] }}" id="check{{ count|length }}">
+                                    <label class="form-check-label" for="check{{ count|length }}">{{ item[1] }} ({{ item[2] }})</label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% endfor %}
+                        </div>
+                        {% if user_data['rank'][0] < 4 or services['withdraw'] is false %}
+                        <button type="submit" class="btn btn-primary mt-3" disabled>Withdraw</button>
+                        {% elif user_data['withdrawing'] %}
+                        <button type="submit" class="btn btn-primary mt-3" disabled>Pending request</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-primary mt-3">Withdraw</button>
+                        {% endif %}
+                    </form>
+                    {% else %}
+                    <div class="card-text">
+                        You have no items in your inventory 😇
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card mb-3">
+                <h2 class="my-4">Balance</h2>
+                <div class="card-body" id="bal">
+                    {% for tier in user_data['balance'] if user_data['balance'][tier] > 0  %}
+                    {% if loop.index == 1 %}
+                    <div class="card-text mb-3">
+                        Use your balance to claim items from the <a href="/marketplace" class="link-info">marketplace</a>
+                    </div>
+                    {% endif %}
+                    <div class="card-text mb-1">
+                        <span class="badge bg-primary">Amount: {{ user_data['balance'][tier] }}</span> {{ '⭐' * tier }}
+                    </div>
+                    {% else %}
+                    <div class="card-text mb-3">
+                        You don't have any tokens 😥
+                    </div>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

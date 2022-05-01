@@ -1,0 +1,115 @@
+html {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+body {
+  background-color: #090D11;
+  color: #e4e3e3;
+  overflow: hidden;
+}
+
+a {
+  color: #e4e3e3;
+  text-decoration: none;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+@font-face {
+  font-family: Consolas;
+  src: local("Consolas"),
+  url(/static/fonts/Consolas.ttf);
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: Consolas;
+}
+
+.fade {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 2s, opacity 0.5s ease-in-out;
+}
+
+.main {
+  position: fixed;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+#avatar {
+  max-width: 300px;
+  max-height: 300px;
+}
+
+.loading {
+  height: 100%;
+  width: 100%;
+  background-color: #090D11;
+  position: fixed;
+  text-align: center;
+  z-index: 1;
+}
+
+.footer {
+  font-style: italic;
+  position: absolute;
+  bottom: 0.5%;
+  right: 0.5%;
+}
+
+.background {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -3;
+}
+
+.pattern {
+  position: absolute;
+  background-image: url("../images/dot.png");
+  z-index: -1;
+}
+
+.pattern,
+.background-video {
+  width: 100%;
+  height: 100%;
+}
+
+.background-video {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+  z-index: -2;
+}
+
+video::-webkit-media-controls {
+  display: none;
+}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+{% block body %}
+<div class="main">
+    <div class="container-fluid mb-3">
+        <h1>Login</h1>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <section class="mb-3">
+            {% for category, message in messages %}
+                {% if category == 'message' %}{% set category = 'info' %}{% endif %}
+                <div class="text-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </section>
+    {% endif %}
+    {% endwith %}
+    <a href="{{ login_url }}"><img style="max-width: 225px; max-height: 225px;" src="/static/images/Discord.webp" title="Login with Discord" alt="Login with Discord"></a>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Tasks{% endblock %}
+{% block avatar %}{{ user_data['discord']['avatar'] }}{% endblock %}
+{% block head %}
+<script async src="/static/js/challenge.js"></script>
+{% endblock %}
+{% block body %}
+<section class="text-center my-4">
+    <div class="container-fluid">
+        <h1>Tasks</h1>
+    </div>
+</section>
+
+<div class="container text-center p-3" id="task">
+    <section class="mb-3">
+        <div class="text-info" id="status">Please wait...</div>
+        <div class="progress w-50 my-3">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 25%"></div>
+        </div>
+    </section>
+    <div id="captcha"></div>
+</div>
+{% endblock %}

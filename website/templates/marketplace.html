@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Marketplace{% endblock %}
+{% block avatar %}{{ user_data['discord']['avatar'] }}{% endblock %}
+{% block body %}
+<section class="text-center my-4">
+    <div class="container-fluid mb-3">
+        <h1>Marketplace</h1>
+    </div>
+    <div class="container-fluid mx-auto">
+        <div class="btn-group">
+            <div class="dropdown mb-3 mb-lg-0 me-lg-3">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Sort by:
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item{% if params['sorting'] == '3' %} active{% endif%}" href="?sorting=3{% if params['order'] %}&order={{ params['order'] }}{% endif%}{% if params['ordertype'] %}&ordertype={{ params['ordertype'] }}{% endif%}">Accessories</a></li>
+                    <li><a class="dropdown-item{% if params['sorting'] == '2' %} active{% endif%}" href="?sorting=2{% if params['order'] %}&order={{ params['order'] }}{% endif%}{% if params['ordertype'] %}&ordertype={{ params['ordertype'] }}{% endif%}">Chairs</a></li>
+                    <li><a class="dropdown-item{% if params['sorting'] is not defined or params['sorting'] == '1' %} active{% endif%}" href="?sorting=1{% if params['order'] %}&order={{ params['order'] }}{% endif%}{% if params['ordertype'] %}&ordertype={{ params['ordertype'] }}{% endif%}">Knifes</a></li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Order by:
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item{% if params['ordertype'] is not defined or params['ordertype'] == '1' %} active{% endif%}" href="?{% if params['sorting'] %}sorting={{ params['sorting'] }}&{% endif%}{% if params['order'] %}order={{ params['order'] }}&{% endif%}ordertype=1">Low to High (Asc)</a></li>
+                    <li><a class="dropdown-item{% if params['ordertype'] == '2' %} active{% endif%}" href="?{% if params['sorting'] %}sorting={{ params['sorting'] }}&{% endif%}{% if params['order'] %}order={{ params['order'] }}&{% endif%}ordertype=2">High to Low (Desc)</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item{% if params['order'] is not defined or params['order'] == '1' %} active{% endif%}" href="?{% if params['sorting'] %}sorting={{ params['sorting'] }}&{% endif%}order=1{% if params['ordertype'] %}&ordertype={{ params['ordertype'] }}{% endif%}">Tier</a></li>
+                    <li><a class="dropdown-item{% if params['order'] == '2' %} active{% endif%}" href="?{% if params['sorting'] %}sorting={{ params['sorting'] }}&{% endif%}order=2{% if params['ordertype'] %}&ordertype={{ params['ordertype'] }}{% endif%}">Stock</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container text-center mb-4">
+    <div class="row row-cols-1 row-cols-lg-3">
+        {% for data in items %}
+        <div class="col p-3">
+            <div class="card">
+                <div class="card-body">
+                    <img class="img-fluid card-img" src="/static/images/items/{{ item_category }}/{{ data[1] }}.webp" title="Stock: {{ data[3] }}" alt="{{ data[1] }}">
+                    <h4 class="card-title">{{ data[1] }}</h4>
+                    <div class="container-fluid p-2">
+                        <form method="POST">
+                            <input type="hidden" name="category" value="{{ item_category }}">
+                            <input type="hidden" name="id" value="{{ data[0] }}">
+                            {% if data[3] == 0 %}
+                            <button type="submit" class="btn btn-primary" disabled>Out of stock</button>
+                            {% else %}
+                            <button type="submit" class="btn btn-primary">Claim</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    Stock: {{ data[3] }}
+                    <br>
+                    Value: {{ '⭐' * data[2] }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

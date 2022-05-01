@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{{ status }}{% endblock %}
+{% block body %}
+<div class="main">
+    {% if status == 404 %}
+    <h2>Page not found</h2>
+    <p>Redirecting...</p>
+    <img style="max-width: 300px; max-height: 300px;" src="/static/images/avatar/404.webp" title="Sorry, that page doesn't exist!" alt="She says: Sorry!">
+    {% elif status == 429 %}
+    <h2>Too many requests!</h2>
+    <p>You're being rate limited, try again soon</p>
+    <img style="max-width: 300px; max-height: 300px;" src="/static/images/avatar/429.webp" title="You're sending requests a bit too fast! 😅&#13;&#10;Try again soon 😊" alt="She says: Try again soon 😊">
+    {% elif status == 500 %}
+    <h2>Oops! Looks like something broke</h2>
+    <p>Sorry. <kbd>Ctrl + R</kbd> 🙃<br>If this page shows up constantly please contact <b>DebugLog#0028</b></p>
+    <img style="max-width: 300px; max-height: 300px;" src="/static/images/avatar/500.webp" title="We'll fix this soon 😇" alt="She says: We'll fix this soon 😇">
+    {% else %}
+    <h2>Status code: {{ status }}</h2>
+    <img style="max-width: 300px; max-height: 300px;" src="/static/images/avatar/404.webp">
+    {% endif %}
+</div>
+{% endblock %}

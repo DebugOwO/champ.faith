@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="color-scheme" content="dark">
+        <meta property="og:site_name" content="champ.faith">
+        <meta property="og:title" content="Champ 😊">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://champ.faith/">
+        <meta property="og:description" content="become a member of our exclusive community 😇">
+        <meta property="og:image" content="https://cdn.discordapp.com/attachments/778758610376851466/931323229983895552/default.png">
+        <meta name="theme-color" content="#FFFFFF">
+        <title>{% block title %}{% endblock %} - 🙏</title>
+        <link href="/static/css/bootstrap.css" rel="stylesheet">
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+{% if active is defined %}
+        <nav class="navbar bg-secondary border-bottom-secondary navbar-expand-lg mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/profile">
+                    <img class="d-none d-lg-inline rounded-circle me-1" onerror="this.src='/static/images/avatar/default.png'" src="{% block avatar %}{% endblock %}" alt="Avatar" width="30" height="30">
+                    champ.faith
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navmenu">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/discord" target="_blank">Discord server</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Menu</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item{% if active == 'profile' %} active{% endif%}" href="/profile">Profile</a></li>
+                                <li><a class="dropdown-item{% if active == 'marketplace' %} active{% endif%}" href="/marketplace">Marketplace</a></li>
+                                <li><a class="dropdown-item{% if active == 'tasks' %} active{% endif%}" href="/tasks">Tasks</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/logout">Log out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+{% endif%}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages and active is defined %}
+        {% for category, message in messages %}
+            {% if category == 'message' %}{% set category = 'info' %}{% endif %}
+            {% if category == 'important' or category == 'critical' %}
+            {% if category == 'critical' %}{% set category = 'danger' %}{% endif %}
+            {% if category == 'important' %}{% set category = 'info' %}{% endif %}
+            <div class="alert alert-{{ category }} m-4">
+                {{ message }}
+            </div>
+            {% else %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show m-4" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+        {% block body %}{% endblock %}
+        <script src="/static/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

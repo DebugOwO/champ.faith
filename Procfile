@@ -1,0 +1,1 @@
+web: hypercorn asgi:application
